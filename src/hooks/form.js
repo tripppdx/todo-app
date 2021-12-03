@@ -1,17 +1,22 @@
 import { useState } from 'react';
 
-const useForm = (callback) => {
-
+const useForm = callback => {
   const [values, setValues] = useState({});
 
-  const handleSubmit = (event) => {
-    if (event) event.preventDefault();
+  const handleSubmit = event => {
+    // console.log('EVENT', event.target.name);
+    event.preventDefault();
+
     callback(values);
   };
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     event.persist();
-    setValues(values => ({ ...values, [event.target.name]: event.target.value }));
+    console.log('CHANGE', event.target.name);
+    setValues(values => ({
+      ...values,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   return {
