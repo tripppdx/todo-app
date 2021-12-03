@@ -1,20 +1,25 @@
 import React, { useEffect, useState, useContext } from 'react';
-import useForm from '../../hooks/form.js';
+// import useForm from '../../hooks/form.js';
 
 import { v4 as uuid } from 'uuid';
 import { Button, Label, Switch, Card, Elevation } from '@blueprintjs/core';
 import { SettingsContext } from '../../context/settings/context';
+import './todo.scss';
 
 const crypto = require('crypto');
 
 const ToDo = () => {
   const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
-  const { handleChange, handleSubmit } = useForm(addItem);
+  // const { handleChange, handleSubmit } = useForm(addItem);
 
   const settings = useContext(SettingsContext);
   const [startIdx, setStartIdx] = useState(0);
   const [endIdx, setEndIdx] = useState(settings.numItems);
+
+  const [itemName, setItem] = useState('');
+  const [assignee, setAssignee] = useState('');
+  const [difficulty, setDifficulty] = useState(3);
 
   function addItem(item) {
     console.log(item);
@@ -38,6 +43,11 @@ const ToDo = () => {
     setList(items);
   }
 
+  function handleShowNumItems(e) {
+    let { value } = e.target;
+    settings.setNumItems(value);
+  }
+
   useEffect(() => {
     let incompleteCount = list.filter(item => !item.complete);
     setIncomplete(incompleteCount);
@@ -49,7 +59,12 @@ const ToDo = () => {
   }
 
   function pagination() {
-    let data = incomplete.slice(startIdx, endIdx);
+    let data;
+    if (settings.hide) {
+      data = incomplete.slice(startIdx, endIdx);
+    } else {
+      data = list.slice(startIdx, endIdx);
+    }
     console.log(incomplete);
     console.log(data, startIdx, endIdx);
     return data;
@@ -69,6 +84,32 @@ const ToDo = () => {
     }
   }
 
+  function handleItem(e) {
+    let { value } = e.target;
+    setItem(value);
+  }
+  function handleAssignee(e) {
+    let { value } = e.target;
+    setAssignee(value);
+  }
+  function handleDifficulty(e) {
+    let { value } = e.target;
+    setDifficulty(value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    let item = {
+      id: uuid(),
+      text: itemName,
+      complete: false,
+      assignee: assignee,
+      difficulty: difficulty,
+    };
+    console.log('------ item-->', item);
+    setList([...list, item]);
+  }
+
   useEffect(() => {
     setStartIdx(0);
     setEndIdx(settings.numItems);
@@ -86,7 +127,7 @@ const ToDo = () => {
         <Label>
           <span>To Do Item</span>
           <input
-            onChange={handleChange}
+            onChange={handleItem}
             name="text"
             type="text"
             placeholder="Item Details"
@@ -96,7 +137,7 @@ const ToDo = () => {
         <Label>
           <span>Assigned To</span>
           <input
-            onChange={handleChange}
+            onChange={handleAssignee}
             name="assignee"
             type="text"
             placeholder="Assignee Name"
@@ -106,7 +147,7 @@ const ToDo = () => {
         <Label>
           <span>Difficulty</span>
           <input
-            onChange={handleChange}
+            onChange={handleDifficulty}
             defaultValue={3}
             type="range"
             min={1}
@@ -122,27 +163,46 @@ const ToDo = () => {
         <Label>
           <Switch onChange={handleHide}> Hide Completed Tasks </Switch>
         </Label>
+        <Label>
+          <span>Number of Items</span>
+          <input
+            onChange={handleShowNumItems}
+            defaultValue={3}
+            type="range"
+            min={1}
+            max={5}
+            name="showNumItems"
+          />
+        </Label>
+        <Button onClick={handlePrevious}>Previous</Button>
+        <Button onClick={handleNext}>NEXT</Button>
       </form>
 
       {pagination().map((item, idx) => (
-        <Card interactive={true} elevation={Elevation.TWO} key={uuid()}>
+        <Card
+          className="cards"
+          interactive={true}
+          elevation={Elevation.TWO}
+          key={uuid()}
+        >
           {settings.hide === false || item.complete === false ? (
             <>
-              <p>{item.text}</p>
+              <p>Item: {item.text}</p>
               <p>
                 <small>Assigned to: {item.assignee}</small>
               </p>
-              <p>{/* <small>Difficulty: {item.difficulty}</small> */}</p>
+              <p>
+                <small>Difficulty: {item.difficulty}</small>
+              </p>
               <div onClick={() => toggleComplete(item.id)}>
                 Complete: {item.complete.toString()}
               </div>
               <hr />
+              <Button onClick={() => deleteItem(item.id)}>Delete</Button>
             </>
           ) : null}
         </Card>
       ))}
-      <Button onClick={handlePrevious}>Previous</Button>
-      <Button onClick={handleNext}>NEXT</Button>
     </>
   );
 };
