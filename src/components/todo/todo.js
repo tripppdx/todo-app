@@ -2,8 +2,10 @@ import React, { useEffect, useState, useContext } from 'react';
 import useForm from '../../hooks/form.js';
 
 import { v4 as uuid } from 'uuid';
-import { Button, Label, Switch } from '@blueprintjs/core';
+import { Button, Label, Switch, Card, Elevation } from '@blueprintjs/core';
 import { SettingsContext } from '../../context/settings/context';
+
+const crypto = require('crypto');
 
 const ToDo = () => {
   const [list, setList] = useState([]);
@@ -48,6 +50,7 @@ const ToDo = () => {
 
   function pagination() {
     let data = incomplete.slice(startIdx, endIdx);
+    console.log(incomplete);
     console.log(data, startIdx, endIdx);
     return data;
   }
@@ -121,24 +124,22 @@ const ToDo = () => {
         </Label>
       </form>
 
-      {pagination().map(item => (
-        <div key={item.id}>
+      {pagination().map((item, idx) => (
+        <Card interactive={true} elevation={Elevation.TWO} key={uuid()}>
           {settings.hide === false || item.complete === false ? (
             <>
               <p>{item.text}</p>
               <p>
                 <small>Assigned to: {item.assignee}</small>
               </p>
-              <p>
-                <small>Difficulty: {item.difficulty}</small>
-              </p>
+              <p>{/* <small>Difficulty: {item.difficulty}</small> */}</p>
               <div onClick={() => toggleComplete(item.id)}>
                 Complete: {item.complete.toString()}
               </div>
               <hr />
             </>
           ) : null}
-        </div>
+        </Card>
       ))}
       <Button onClick={handlePrevious}>Previous</Button>
       <Button onClick={handleNext}>NEXT</Button>
