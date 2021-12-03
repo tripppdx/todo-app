@@ -198,6 +198,7 @@ const ToDo = () => {
                 Complete: {item.complete.toString()}
               </div>
               <hr />
+              <Button onClick={() => deleteItem(item.id)}>Delete</Button>
             </>
           ) : null}
         </Card>
