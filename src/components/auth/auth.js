@@ -1,21 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { When } from 'react-if';
 
 import { LoginContext } from '../../context/auth/context.js';
 
-class Auth extends React.Component {
-  static contextType = LoginContext;
+function Auth(props) {
+  const auth = useContext(LoginContext);
 
-  render() {
-    console.log(this.props.capability);
-    const isLoggedIn = this.context.loggedIn;
-    const canDo = this.props.capability
-      ? this.context.canHandler(this.props.capability)
-      : true;
-    const okToRender = isLoggedIn && canDo;
+  const isLoggedIn = auth.loggedIn;
+  const canDo = props.capability ? auth.canHandler(props.capability) : true;
+  const okToRender = isLoggedIn && canDo;
 
-    return <When condition={okToRender}>{this.props.children}</When>;
-  }
+  return <When condition={okToRender}>{props.children}</When>;
 }
 
 export default Auth;

@@ -28,14 +28,14 @@ export const LoginContext = React.createContext();
 
 function LoginProvider({ children }) {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [can, setCan] = useState(false);
+  // const [can, setCan] = useState(false);
   const [user, setUser] = useState({ capabilities: [] });
   const [token, setToken] = useState('');
 
   const canHandler = capability => {
     let canWe = user?.capabilities?.includes(capability);
     console.log(canWe);
-    setCan(canWe);
+    // setCan(canWe);
     return canWe;
   };
 
@@ -79,7 +79,7 @@ function LoginProvider({ children }) {
 
   return (
     <LoginContext.Provider
-      value={{ loggedIn, canHandler, user, login, logout, can, token }}
+      value={{ loggedIn, canHandler, user, login, logout, token }}
     >
       {children}
     </LoginContext.Provider>

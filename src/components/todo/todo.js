@@ -22,7 +22,7 @@ const ToDo = () => {
   const [endIdx, setEndIdx] = useState(settings.numItems);
 
   function addItem(item) {
-    console.log('CAN', auth.can('read'));
+    console.log('CAN', auth.canHandler('read'));
     setList([...list, item]);
   }
 
@@ -170,7 +170,7 @@ const ToDo = () => {
                 Complete: {item.complete.toString()}
               </div>
               <hr />
-              {auth.can('delete') ? (
+              {auth.canHandler('delete') ? (
                 <Button onClick={() => deleteItem(item.id)}>Delete</Button>
               ) : null}
             </>

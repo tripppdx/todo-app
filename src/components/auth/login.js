@@ -1,52 +1,50 @@
-import React from 'react';
+import { useState, useContext } from 'react';
 import { When } from 'react-if';
 
 import { LoginContext } from '../../context/auth/context.js';
 
-class Login extends React.Component {
-  static contextType = LoginContext;
+function Login(props) {
+  const auth = useContext(LoginContext);
 
-  constructor(props) {
-    super(props);
-    this.state = { username: '', password: '' };
-  }
+  const [userInfo, setUserInfo] = useState({});
 
-  handleChange = e => {
-    console.log(e.target.value);
-    this.setState({ [e.target.name]: e.target.value });
+  const handleChange = e => {
+    setUserInfo(prev => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value,
+      };
+    });
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    console.log(e);
-    this.context.login(this.state.username, this.state.password);
+    auth.login(userInfo.username, userInfo.password);
   };
 
-  render() {
-    return (
-      <>
-        <When condition={this.context.loggedIn}>
-          <button onClick={this.context.logout}>Log Out</button>
-        </When>
+  return (
+    <>
+      <When condition={auth.loggedIn}>
+        <button onClick={auth.logout}>Log Out</button>
+      </When>
 
-        <When condition={!this.context.loggedIn}>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              placeholder="UserName"
-              name="username"
-              onChange={this.handleChange}
-            />
-            <input
-              placeholder="password"
-              name="password"
-              onChange={this.handleChange}
-            />
-            <button>Login</button>
-          </form>
-        </When>
-      </>
-    );
-  }
+      <When condition={!auth.loggedIn}>
+        <form onSubmit={handleSubmit}>
+          <input
+            placeholder="UserName"
+            name="username"
+            onChange={handleChange}
+          />
+          <input
+            placeholder="password"
+            name="password"
+            onChange={handleChange}
+          />
+          <button>Login</button>
+        </form>
+      </When>
+    </>
+  );
 }
 
 export default Login;
