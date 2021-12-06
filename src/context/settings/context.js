@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export const SettingsContext = React.createContext();
 
-function Settings(props) {
+function SettingsProvider(props) {
   let [hide, setHide] = useState(false);
   let [numItems, setNumItems] = useState(3);
   let [sort, setSort] = useState('');
@@ -16,4 +16,4 @@ function Settings(props) {
   );
 }
 
-export default Settings;
+export default SettingsProvider;

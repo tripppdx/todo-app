@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-// import useForm from '../../hooks/form.js';
+import useForm from '../../hooks/form.js';
 
 import { v4 as uuid } from 'uuid';
 import { Button, Label, Switch, Card, Elevation } from '@blueprintjs/core';
 import { SettingsContext } from '../../context/settings/context';
+import { LoginContext } from '../../context/auth/context.js';
+
 import './todo.scss';
 
 const crypto = require('crypto');
@@ -11,20 +13,16 @@ const crypto = require('crypto');
 const ToDo = () => {
   const [list, setList] = useState([]);
   const [incomplete, setIncomplete] = useState([]);
-  // const { handleChange, handleSubmit } = useForm(addItem);
+  const { handleAssignee, handleDifficulty, handleSubmit, handleItem } =
+    useForm(addItem);
 
   const settings = useContext(SettingsContext);
+  const auth = useContext(LoginContext);
   const [startIdx, setStartIdx] = useState(0);
   const [endIdx, setEndIdx] = useState(settings.numItems);
 
-  const [itemName, setItem] = useState('');
-  const [assignee, setAssignee] = useState('');
-  const [difficulty, setDifficulty] = useState(3);
-
   function addItem(item) {
-    console.log(item);
-    item.id = uuid();
-    item.complete = false;
+    console.log('CAN', auth.canHandler('read'));
     setList([...list, item]);
   }
 
@@ -82,32 +80,6 @@ const ToDo = () => {
       setStartIdx(startIdx - settings.numItems);
       setEndIdx(endIdx - settings.numItems);
     }
-  }
-
-  function handleItem(e) {
-    let { value } = e.target;
-    setItem(value);
-  }
-  function handleAssignee(e) {
-    let { value } = e.target;
-    setAssignee(value);
-  }
-  function handleDifficulty(e) {
-    let { value } = e.target;
-    setDifficulty(value);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    let item = {
-      id: uuid(),
-      text: itemName,
-      complete: false,
-      assignee: assignee,
-      difficulty: difficulty,
-    };
-    console.log('------ item-->', item);
-    setList([...list, item]);
   }
 
   useEffect(() => {
@@ -198,7 +170,9 @@ const ToDo = () => {
                 Complete: {item.complete.toString()}
               </div>
               <hr />
-              <Button onClick={() => deleteItem(item.id)}>Delete</Button>
+              {auth.canHandler('delete') ? (
+                <Button onClick={() => deleteItem(item.id)}>Delete</Button>
+              ) : null}
             </>
           ) : null}
         </Card>
