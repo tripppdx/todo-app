@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import cookie from 'react-cookies';
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
+
 const SECRET = process.env.REACT_APP_SECRET || 'secretstring';
 
 const testUsers = {
@@ -49,6 +51,14 @@ function LoginProvider({ children }) {
     }
   };
 
+  const signup = async userSignupInfo => {
+    let response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/signup`,
+      userSignupInfo
+    );
+    console.log(response);
+  };
+
   const logout = () => {
     setLoginState(false, null, {});
   };
@@ -79,7 +89,7 @@ function LoginProvider({ children }) {
 
   return (
     <LoginContext.Provider
-      value={{ loggedIn, canHandler, user, login, logout, token }}
+      value={{ loggedIn, canHandler, user, login, logout, token, signup }}
     >
       {children}
     </LoginContext.Provider>
