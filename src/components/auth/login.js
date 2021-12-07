@@ -1,7 +1,15 @@
 import { useState, useContext } from 'react';
 import { When } from 'react-if';
-
+import {
+  Button,
+  FormGroup,
+  InputGroup,
+  RadioGroup,
+  Radio,
+} from '@blueprintjs/core';
 import { LoginContext } from '../../context/auth/context.js';
+
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function Login(props) {
   const auth = useContext(LoginContext);
@@ -19,8 +27,11 @@ function Login(props) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    auth.login(userInfo.username, userInfo.password);
+    // auth.login(userInfo.username, userInfo.password);
+    auth.signup(userInfo);
   };
+
+  console.log(userInfo);
 
   return (
     <>
@@ -30,17 +41,21 @@ function Login(props) {
 
       <When condition={!auth.loggedIn}>
         <form onSubmit={handleSubmit}>
-          <input
+          <InputGroup
             placeholder="UserName"
             name="username"
             onChange={handleChange}
           />
-          <input
+          <InputGroup
             placeholder="password"
             name="password"
             onChange={handleChange}
           />
-          <button>Login</button>
+          <RadioGroup name="role" onChange={handleChange}>
+            <Radio label="user" value="user" />
+            <Radio label="admin" value="admin" />
+          </RadioGroup>
+          <Button type="submit">Login</Button>
         </form>
       </When>
     </>

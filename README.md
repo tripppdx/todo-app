@@ -2,7 +2,7 @@
 
 Created by Harvey Lucas and Roop Hayer
 
-## Deploy URL's
+## Deploy URL
 
 Netlify: https://silly-bhabha-7968f1.netlify.app
 
@@ -10,9 +10,18 @@ Netlify: https://silly-bhabha-7968f1.netlify.app
 
 A Web Application for securely managing a To Do List.
 
-### Phase 3 Requirements - Lab: Class 33
+### Phase 4 Requirements - Lab: Class 34
 
-## Phase 3 Requirements
+- Alter the Add, Toggle Complete, and Delete functions within your to do application to use your API instead of in memory state.
+
+  - Fetch the current list of items from the database on application start
+  - Whenever you add/update/delete an item, refresh the state so the user can instantly see the change
+
+- Alter the Login Context to use the server to login users instead of our mock users list.
+
+  - Be sure to store the token in state as well as in a cookie so you can reference it later.
+
+### Phase 3 Requirements - Lab: Class 33
 
 In Phase 3, we’d like to extend the functionality of the application by requiring users be logged in to view items and also restrict access based on user type. The user stories from Phases 1, and 2 remain unchanged. For this phase, we are now adding the following new user stories.
 
